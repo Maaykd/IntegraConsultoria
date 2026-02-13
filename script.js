@@ -1,34 +1,23 @@
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
 
-// Navbar scroll effect
+// ========================================
+// DECLARAÇÃO DE VARIÁVEIS (UMA VEZ APENAS)
+// ========================================
 const navbar = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-});
-
-// Mobile menu toggle
 const menuToggle = document.getElementById('menu-toggle');
 const mobileMenu = document.getElementById('mobile-menu');
 const menuIcon = document.getElementById('menu-icon');
+const scrollDownArrow = document.querySelector('.scroll-down');
+const whatsappFloat = document.getElementById('whatsapp-float');
+const contactForm = document.getElementById('contact-form');
+const formSuccess = document.getElementById('form-success');
+let lastScrollTop = 0;
 
+// ========================================
+// MOBILE MENU TOGGLE
+// ========================================
 menuToggle.addEventListener('click', () => {
     mobileMenu.classList.toggle('active');
+    
     if (mobileMenu.classList.contains('active')) {
         menuIcon.classList.remove('fa-bars');
         menuIcon.classList.add('fa-times');
@@ -38,8 +27,9 @@ menuToggle.addEventListener('click', () => {
     }
 });
 
-// Close mobile menu when clicking a link
-document.querySelectorAll('.mobile-link').forEach(link => {
+// Close mobile menu when clicking on a link
+const mobileLinks = document.querySelectorAll('.mobile-link');
+mobileLinks.forEach(link => {
     link.addEventListener('click', () => {
         mobileMenu.classList.remove('active');
         menuIcon.classList.remove('fa-times');
@@ -47,62 +37,144 @@ document.querySelectorAll('.mobile-link').forEach(link => {
     });
 });
 
-// Intersection Observer for fade-in animations
+// ========================================
+// SCROLL EFFECTS (navbar, arrow, whatsapp)
+// ========================================
+// Hide WhatsApp float initially
+if (whatsappFloat) {
+    whatsappFloat.style.opacity = '0';
+    whatsappFloat.style.transform = 'scale(0)';
+    whatsappFloat.style.pointerEvents = 'none';
+}
+
+window.addEventListener('scroll', () => {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Navbar effect
+    if (scrollTop > 100) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+    
+    // Hide/Show scroll down arrow
+    if (scrollDownArrow) {
+        if (scrollTop > 150) {
+            scrollDownArrow.style.opacity = '0';
+            scrollDownArrow.style.pointerEvents = 'none';
+        } else {
+            scrollDownArrow.style.opacity = '1';
+            scrollDownArrow.style.pointerEvents = 'auto';
+        }
+    }
+    
+    // Show WhatsApp float button after scroll
+    if (whatsappFloat) {
+        if (scrollTop > 300) {
+            whatsappFloat.style.opacity = '1';
+            whatsappFloat.style.transform = 'scale(1)';
+            whatsappFloat.style.pointerEvents = 'auto';
+        } else {
+            whatsappFloat.style.opacity = '0';
+            whatsappFloat.style.transform = 'scale(0)';
+            whatsappFloat.style.pointerEvents = 'none';
+        }
+    }
+    
+    lastScrollTop = scrollTop;
+});
+
+// ========================================
+// FADE-IN ON SCROLL (Intersection Observer)
+// ========================================
 const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.1
 };
 
-const observer = new IntersectionObserver((entries) => {
+const observerCallback = (entries, observer) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
         }
     });
-}, observerOptions);
+};
 
-document.querySelectorAll('.fade-in-element').forEach(el => {
-    observer.observe(el);
+const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+// Observe all fade-in elements
+const fadeElements = document.querySelectorAll('.fade-in-element');
+fadeElements.forEach(element => {
+    observer.observe(element);
 });
 
-// Contact form submission
-const contactForm = document.getElementById('contact-form');
-const formSuccess = document.getElementById('form-success');
+// ========================================
+// CONTACT FORM SUBMISSION
+// ========================================
+if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        // Get form values
+        const nome = contactForm.querySelector('[name="nome"]').value;
+        const telefone = contactForm.querySelector('[name="telefone"]').value;
+        const mensagem = contactForm.querySelector('[name="mensagem"]').value;
+        
+        // Create WhatsApp message
+        const whatsappMessage = `Olá! Meu nome é ${nome}.%0A%0ATelefone: ${telefone}%0A%0AMensagem: ${mensagem || 'Gostaria de saber mais sobre os serviços da Íntegra.'}`;
+        
+        // Redirect to WhatsApp
+        window.open(`https://wa.me/5561993175875?text=${whatsappMessage}`, '_blank');
+        
+        // Show success message
+        contactForm.style.display = 'none';
+        formSuccess.style.display = 'block';
+    });
+}
 
-contactForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const formData = {
-        nome: contactForm.nome.value,
-        telefone: contactForm.telefone.value,
-        mensagem: contactForm.mensagem.value
-    };
-    
-    console.log('Form submitted:', formData);
-    
-    // Simular envio (substitua por sua API real)
-    // await fetch('/api/contact', {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify(formData)
-    // });
-    
-    // Show success message
-    contactForm.style.display = 'none';
-    formSuccess.style.display = 'block';
-});
-
+// Reset form function
 function resetForm() {
     contactForm.reset();
     contactForm.style.display = 'flex';
     formSuccess.style.display = 'none';
 }
 
-// Add stagger delay to animated elements
-document.querySelectorAll('.services-grid .service-card').forEach((card, i) => {
-    card.style.transitionDelay = `${i * 0.1}s`;
+// ========================================
+// SMOOTH SCROLL FOR ANCHOR LINKS
+// ========================================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            const navbarHeight = navbar.offsetHeight;
+            const targetPosition = targetElement.offsetTop - navbarHeight;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        }
+    });
 });
 
-document.querySelectorAll('.benefits-grid .benefit-card').forEach((card, i) => {
-    card.style.transitionDelay = `${i * 0.12}s`;
+// ========================================
+// STAGGER DELAY FOR FADE-IN ELEMENTS
+// ========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const fadeElements = document.querySelectorAll('.fade-in-element');
+    
+    fadeElements.forEach((element) => {
+        const section = element.closest('section');
+        const elementsInSection = section ? Array.from(section.querySelectorAll('.fade-in-element')) : [];
+        const indexInSection = elementsInSection.indexOf(element);
+        
+        element.style.transitionDelay = `${indexInSection * 0.1}s`;
+    });
 });

@@ -160,7 +160,7 @@ html {
     border-radius: 12px;
 }
 
-/* Hero Section */
+/* Hero Section - CORRIGIDO PARA CENTRALIZAÇÃO PERFEITA */
 .hero-section {
     position: relative;
     min-height: 100vh;
@@ -179,6 +179,7 @@ html {
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.6;
+    z-index: 1;
 }
 
 .hero-bg-decoration::before {
@@ -201,28 +202,33 @@ html {
     position: relative;
     z-index: 10;
     text-align: center;
-    padding: 40px 24px;
+    padding: 20px 24px 120px 24px; 
     width: 100%;
-    max-width: 1200px;
+    max-width: 900px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .hero-logo {
-    width: 180px;
-    height: 180px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     object-fit: cover;
-    margin: 0 auto 32px;
+    margin: 0 auto 24px;
     border: 4px solid white;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+    display: block;
 }
 
 .hero-badge {
     display: inline-block;
-    padding: 6px 16px;
+    padding: 8px 16px;
     background: #fef2f2;
     color: var(--color-red);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -231,11 +237,12 @@ html {
 }
 
 .hero-title {
-    font-size: clamp(36px, 6vw, 72px);
+    font-size: clamp(32px, 5vw, 56px);
     font-weight: 900;
     line-height: 1.1;
-    margin-bottom: 24px;
-    letter-spacing: -1px;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+    color: #111827;
 }
 
 .text-red {
@@ -247,11 +254,11 @@ html {
 }
 
 .hero-subtitle {
-    font-size: clamp(16px, 2vw, 20px);
+    font-size: clamp(15px, 2vw, 18px);
     color: #4b5563;
-    max-width: 700px;
-    margin: 0 auto 40px;
-    line-height: 1.7;
+    max-width: 650px;
+    margin: 0 auto 32px;
+    line-height: 1.6;
 }
 
 .hero-buttons {
@@ -259,38 +266,39 @@ html {
     flex-wrap: wrap;
     gap: 16px;
     justify-content: center;
+    align-items: center;
 }
 
 .btn-primary {
     display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 16px 32px;
+    gap: 10px;
+    padding: 14px 28px;
     background: var(--color-green);
     color: white;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     border-radius: 999px;
-    box-shadow: 0 10px 30px rgba(45, 140, 60, 0.3);
+    box-shadow: 0 8px 24px rgba(45, 140, 60, 0.25);
     transition: all 0.3s;
 }
 
 .btn-primary:hover {
     background: var(--color-green-dark);
     transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(45, 140, 60, 0.4);
+    box-shadow: 0 12px 32px rgba(45, 140, 60, 0.35);
 }
 
 .btn-secondary {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 16px 32px;
-    background: transparent;
+    padding: 14px 28px;
+    background: white;
     color: #374151;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     border: 2px solid #e5e7eb;
     border-radius: 999px;
@@ -300,17 +308,21 @@ html {
 .btn-secondary:hover {
     border-color: var(--color-red);
     color: var(--color-red);
+    background: #fef2f2;
 }
 
 .scroll-down {
     position: absolute;
-    bottom: 32px;
+    bottom: 5px;
+    /* Aumentei de 40px para 60px */
     left: 50%;
     transform: translateX(-50%);
     color: #9ca3af;
-    font-size: 24px;
+    font-size: 28px;
+    /* Aumentei um pouco também */
     animation: bounce 2s infinite;
-    transition: color 0.3s;
+    transition: opacity 0.4s ease, color 0.3s ease;
+    z-index: 5;
 }
 
 .scroll-down:hover {
@@ -318,8 +330,16 @@ html {
 }
 
 @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(10px); }
+
+    0%,
+    100% {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    50% {
+        transform: translateX(-50%) translateY(12px);
+        /* Aumentei o bounce também */
+    }
 }
 
 /* Animations */
@@ -332,6 +352,7 @@ html {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -914,6 +935,7 @@ html {
     from {
         transform: scale(0);
     }
+
     to {
         transform: scale(1);
     }
@@ -929,40 +951,102 @@ html {
     .nav-desktop {
         display: none;
     }
-    
+
     .menu-toggle {
         display: block;
     }
-    
+
+    .hero-section {
+        min-height: calc(100vh - 80px);
+    }
+
     .hero-content {
-        padding: 100px 24px 60px;
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 20px 24px 100px 24px;
+        /* Aumentei o padding-bottom de 20px para 100px */
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
-    
+
     .hero-logo {
-        width: 140px;
-        height: 140px;
+        width: 120px;
+        height: 120px;
+        margin-bottom: 20px;
     }
-    
+
+    .hero-badge {
+        font-size: 11px;
+        padding: 6px 12px;
+        margin-bottom: 20px;
+    }
+
+    .hero-title {
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .hero-subtitle {
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .hero-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 60px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        font-size: 15px;
+        padding: 12px 24px;
+    }
+
+    .scroll-down {
+        position: absolute;
+        bottom: 30px;
+        /* Ajustei para 30px */
+        left: 50%;
+        transform: translateX(-50%);
+        color: #9ca3af;
+        font-size: 28px;
+        animation: bounce 2s infinite;
+        transition: opacity 0.4s ease, color 0.3s ease;
+        z-index: 5;
+    }
+
     .about-section,
     .services-section,
     .benefits-section,
     .contact-section {
         padding: 64px 0;
     }
-    
+
     .section-header {
         margin-bottom: 48px;
     }
-    
+
     .services-grid,
     .benefits-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .contact-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .whatsapp-float {
         width: 56px;
         height: 56px;
@@ -970,4 +1054,48 @@ html {
         bottom: 16px;
         right: 16px;
     }
+}
+
+/* Melhorias na seta de scroll */
+.scroll-down {
+    transition: opacity 0.4s ease, color 0.3s ease;
+}
+
+/* Transição suave no WhatsApp float */
+.whatsapp-float {
+    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+/* Melhorar transição dos fade-in elements */
+.fade-in-element {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    will-change: opacity, transform;
+}
+
+.fade-in-element.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Garantir que elementos não apareçam antes da animação */
+.fade-in-element:not(.visible) {
+    visibility: hidden;
+}
+
+.fade-in-element.visible {
+    visibility: visible;
+}
+
+/* Animação inicial do hero (sem intersection observer) */
+.animate-fade-in {
+    animation: fadeIn 0.8s ease-out forwards;
+}
+
+/* Transições suaves para cards */
+.service-card,
+.benefit-card,
+.feature-card {
+    transition: all 0.3s ease;
 }
